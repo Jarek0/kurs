@@ -5,8 +5,6 @@ import com.sun.istack.internal.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
@@ -14,6 +12,7 @@ import java.sql.Date;
  * Created by Dell on 2017-03-19.
  */
 @Entity//adnotacja sprawia, że klasa jest mapowana na tabele
+@Table(name="heroes")
 public class Hero {
 
     @Id//wybranie klucza głównego
@@ -31,12 +30,11 @@ public class Hero {
     @Size(max=20)
     String characterClass;//pole nie może być puste i musi mieć mniej niż 20 znaków
 
-    @Max(100)
-    int heartpoints;//postać może mieć maksymalnie 100 pkt życia
+    @Column(columnDefinition = "TINYINT")
+    int heartpoints;//zmiana typu danych na tinyint
 
-    @Min(1)
-    @Max(10)
-    int attack;//siła ataku może reprezentować wartość od 1 do 10
+    @Column(columnDefinition = "TINYINT")
+    int attack;//zmiana typu danych na tinyint
 
     @NotNull
     @Column(name= "date_of_birth")
@@ -118,5 +116,17 @@ public class Hero {
 
     public void setMorality(Morality morality) {
         this.morality = morality;
+    }
+
+    @Override
+    public String toString() {
+        return "Hero={\n"+
+                "id:"+this.id+"\n"+
+                "name:"+this.name+"\n"+
+                "heartpoints:"+this.heartpoints+"\n"+
+                "attack:"+this.attack+"\n"+
+                "dateOfBirth:"+this.dateOfBirth+"\n"+
+                "morality:"+this.morality+"\n"+
+                "}";
     }
 }
