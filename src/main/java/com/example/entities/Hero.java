@@ -66,6 +66,10 @@ public class Hero {
     @OneToMany(mappedBy = "hero", cascade = CascadeType.ALL)
     private Set<Item> items;
 
+    @ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
+    @JoinTable(name="hero_mission", joinColumns=@JoinColumn(name="hero_id"), inverseJoinColumns=@JoinColumn(name="mission_id"))
+    private Set<Mission> missions;
+
     //musimy mieć pusty konstruktor
     public Hero(){
 
@@ -163,11 +167,19 @@ public class Hero {
         this.items = items;
     }
 
+    public Set<Mission> getMissions() {
+        return missions;
+    }
+
+    public void setMissions(Set<Mission> missions) {
+        this.missions = missions;
+    }
+
     @Override
     public String toString() {
-        String itemsString="";
-        for(Item item:items)
-            itemsString+=item.toString();
+        String missionsString="";
+        for(Mission mission:missions)
+            missionsString+=mission.toString();
 
         return "Hero={\n"+
                 "id:"+this.id+"\n"+
@@ -176,7 +188,7 @@ public class Hero {
                 "attack:"+this.attack+"\n"+
                 "dateOfBirth:"+this.dateOfBirth+"\n"+
                 "morality:"+this.morality+"\n"+
-                "items:"+itemsString+
+                "missions:"+missionsString+
                 "}";
     }
 }
