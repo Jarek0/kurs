@@ -4,35 +4,44 @@ import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 /**
  * Created by Dell on 2017-03-19.
  */
-@Entity//adnotacja sprawia, że klasa jest mapowana na tabele
-@Table(name="mounts")
-public class Mount {
-
+@Entity
+@Table(name="items")
+public class Item {
     @Id//wybranie klucza głównego
     @GeneratedValue(strategy= GenerationType.AUTO)//autoinkrementacja klucza głównego
     private long id;
 
     @NotNull
+    @Column(unique = true)
     @Size(min=5,max=45)
-    String name;
+    private String name;
 
     @Max(100)
-    @Min(1)
-    int speed;
+    private int power;
 
-    public Mount(){
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "hero_id")
+    private Hero hero;
+
+    public Item(){
 
     }
 
-    public Mount(String name, int speed) {
+    public Item(String name, int power) {
         this.name = name;
-        this.speed = speed;
+        this.power = power;
+    }
+
+    public Item(String name, int power, Hero hero) {
+        this.name = name;
+        this.power = power;
+        this.hero = hero;
     }
 
     public long getId() {
@@ -51,20 +60,28 @@ public class Mount {
         this.name = name;
     }
 
-    public int getSpeed() {
-        return speed;
+    public int getPower() {
+        return power;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public Hero getHero() {
+        return hero;
+    }
+
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
     @Override
     public String toString() {
-        return "Mount={\n"+
+        return "Item={\n"+
                 "id:"+this.id+"\n"+
                 "name:"+this.name+"\n"+
-                "speed:"+this.speed+"\n"+
+                "power:"+this.power+"\n"+
                 "}";
     }
 }

@@ -10,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.sql.Date;
+import java.util.Set;
 
 
 /**
@@ -56,12 +57,14 @@ public class Hero {
     @JoinColumn(name="mount_id")
     private Mount mount;
     /*tryby kaskadowości:
-    ALL - wszystkie operacje przechodza na powiązany obiekt np. usuwanie
-    PERSIST - powoduje, że gdy stworzymy encje to encja powiązanej tabeli również zostanie stworzona
-    MERGE - kiedy dołączymy encje powiązane z nią encje rówież zostaną dołączone
-    REMOVE - kiedy usuniemy encję encje z nią powiązane zostaną usunięte
-     */
+        ALL - wszystkie operacje przechodza na powiązany obiekt np. usuwanie
+        PERSIST - powoduje, że gdy stworzymy encje to encja powiązanej tabeli również zostanie stworzona
+        MERGE - kiedy dołączymy encje powiązane z nią encje rówież zostaną dołączone
+        REMOVE - kiedy usuniemy encję encje z nią powiązane zostaną usunięte
+         */
 
+    @OneToMany(mappedBy = "hero", cascade = CascadeType.ALL)
+    private Set<Item> items;
 
     //musimy mieć pusty konstruktor
     public Hero(){
@@ -152,8 +155,20 @@ public class Hero {
         this.mount = mount;
     }
 
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
+
     @Override
     public String toString() {
+        String itemsString="";
+        for(Item item:items)
+            itemsString+=item.toString();
+
         return "Hero={\n"+
                 "id:"+this.id+"\n"+
                 "name:"+this.name+"\n"+
@@ -161,7 +176,7 @@ public class Hero {
                 "attack:"+this.attack+"\n"+
                 "dateOfBirth:"+this.dateOfBirth+"\n"+
                 "morality:"+this.morality+"\n"+
-                "mount:"+this.mount.toString()+
+                "items:"+itemsString+
                 "}";
     }
 }
