@@ -13,6 +13,6 @@ import java.util.List;
 @Repository//ta adnotacja jest ważna
 public interface HeroRepository extends JpaRepository<Hero,Long>//dziedziczymy po odpowiedniej klasie i okreslany obiekt entity
 {
-//Hero findByName(String name);
-//List<Hero> findByMorality(Morality morality);
+Hero findByName(String name);
+List<Hero> findByMorality(Morality morality);
 }
