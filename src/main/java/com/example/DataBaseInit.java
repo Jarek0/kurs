@@ -11,6 +11,8 @@ import com.example.repositories.MountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -39,21 +41,30 @@ public class DataBaseInit implements ApplicationListener<ContextRefreshedEvent> 
     @Transactional//transakcja
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        //Many to many
-        Hero Geralt=new Hero("Geralt","Wiedzmin",50,5,new Date(new java.util.Date().getTime()), Morality.Dobry);
-        Hero Conan=new Hero("Conan","Barbarzynca",100,15,new Date(new java.util.Date().getTime()), Morality.Neutralny);
+        //własne żądania i stronicowanie
+        for(int i=0;i<10;i++){
+            heroRepository.save(new Hero("Wojownik"+i,"Wojownik",50+i,
+                    10,new Date(new java.util.Date().getTime()), Morality.Dobry,new Mount("kon"+i,50)));
+        }
+        for(int i=0;i<10;i++){
+            heroRepository.save(new Hero("Mag"+i,"Mag",30+i,
+                    10,new Date(new java.util.Date().getTime()), Morality.Zly,new Mount("smok"+i,100)));
+        }
 
-        Mission mission1=new Mission("zabij smoka","zabij smoka");
-        Mission mission2=new Mission("umyj naczynia","umyj naczynia");
-        Mission mission3=new Mission("uratuj krolewne","uratuj krolewne");
-        Mission mission4=new Mission("uratuj galaktyke","uratuj galaktyke");
+        System.out.println("Bohater z wierzchowcem 'kon1'");
+        System.out.println(heroRepository.findByMountName("kon1"));
 
-        Geralt.setMissions(new HashSet<Mission>(Arrays.asList(mission2, mission3,mission4)));
-        Conan.setMissions(new HashSet<Mission>(Arrays.asList(mission1, mission2,mission3)));
+        System.out.println("Bohater z wierzchowcem 'smok3'");
+        System.out.println(heroRepository.findByMountName("smok3"));
 
-        heroRepository.save(Geralt);
-        heroRepository.save(Conan);
-        System.out.println(heroRepository.findByName("Geralt").toString());
-        System.out.println(heroRepository.findByName("Conan").toString());
+        System.out.println("Bohaterowie z klasa 'Wojownik' i morlanością 'Dobry'");
+        for(Hero hero:heroRepository.findByMoralityAndCharacterClass(Morality.Dobry,"Wojownik")){
+            System.out.println(hero);
+        }
+
+        System.out.println("Pierwsza strona bohaterow o rozmiarze 4 posortowana według pola 'heartpoints'");
+        for(Hero hero:heroRepository.findAll(new PageRequest(1, 4, Sort.Direction.DESC,"heartpoints"))){
+            System.out.println(hero);
+        }
     }
 }

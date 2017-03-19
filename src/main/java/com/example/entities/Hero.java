@@ -177,9 +177,6 @@ public class Hero {
 
     @Override
     public String toString() {
-        String missionsString="";
-        for(Mission mission:missions)
-            missionsString+=mission.toString();
 
         return "Hero={\n"+
                 "id:"+this.id+"\n"+
@@ -188,7 +185,7 @@ public class Hero {
                 "attack:"+this.attack+"\n"+
                 "dateOfBirth:"+this.dateOfBirth+"\n"+
                 "morality:"+this.morality+"\n"+
-                "missions:"+missionsString+
+                "mount:"+this.mount.toString()+
                 "}";
     }
 }
