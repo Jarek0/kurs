@@ -22,7 +22,7 @@ public class Mission {
     private String title;
 
     @NotNull
-    @Size(min=5,max=100)
+    @Size(min=5,max=101)
     private String description;
 
     @ManyToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE}, mappedBy="missions")
