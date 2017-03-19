@@ -1,9 +1,13 @@
 package com.example.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.example.entities.enums.Morality;
+import com.sun.istack.internal.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 
 /**
@@ -16,16 +20,33 @@ public class Hero {
     @GeneratedValue(strategy= GenerationType.AUTO)//autoinkrementacja klucza głównego
     private long id;
 
-    //dodatkowe pola
-    String name;
+    //dodatkowe pola z warunkami integralności
 
-    String characterClass;
+    @NotNull
+    @Column(unique = true)
+    @Size(min=5,max=45)
+    String name;//pole name nie może być pusty, musi mieć od 1 do 45 znaków i musi być unikalne
 
-    int heartpoints;
+    @NotNull
+    @Size(max=20)
+    String characterClass;//pole nie może być puste i musi mieć mniej niż 20 znaków
 
-    int attack;
+    @Max(100)
+    int heartpoints;//postać może mieć maksymalnie 100 pkt życia
 
-    Date dateOfBirth;
+    @Min(1)
+    @Max(10)
+    int attack;//siła ataku może reprezentować wartość od 1 do 10
+
+    @NotNull
+    @Column(name= "date_of_birth")
+    @DateTimeFormat(pattern="MM/dd/yyyy")
+    Date dateOfBirth;//data ma mieć określony format i nie być pusta
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "morality",columnDefinition = "ENUM('Dobry', 'Neutralny', 'Zly')")
+    private Morality morality;
 
     //musimy mieć pusty konstruktor
     public Hero(){
@@ -33,12 +54,13 @@ public class Hero {
     }
 
     //dodatkowy konstruktor
-    public Hero(String name, String characterClass, int heartpoints, int attack, Date dateOfBirth) {
+    public Hero(String name, String characterClass, int heartpoints, int attack, Date dateOfBirth, Morality morality) {
         this.name = name;
         this.characterClass = characterClass;
         this.heartpoints = heartpoints;
         this.attack = attack;
         this.dateOfBirth = dateOfBirth;
+        this.morality = morality;
     }
 
     //musimy mieć getery i setery
@@ -88,5 +110,13 @@ public class Hero {
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Morality getMorality() {
+        return morality;
+    }
+
+    public void setMorality(Morality morality) {
+        this.morality = morality;
     }
 }
